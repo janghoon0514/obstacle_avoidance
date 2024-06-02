@@ -1,0 +1,3 @@
+<launch>
+    <node pkg="hand_detection" type="hand_detection_node.py" name="hand_detection_node" output="screen"/>
+</launch>
