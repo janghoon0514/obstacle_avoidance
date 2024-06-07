@@ -1,0 +1,47 @@
+<launch>
+    <arg name="sensor_sn" default="" />
+    <arg name="namespace" default=""/>
+    <group ns="k4a">
+        <param name="robot_description" command="xacro $(find azure_kinect_ros_driver)/urdf/azure_kinect.urdf.xacro" />
+
+        <!-- Spawn a nodelet manager -->
+        <node pkg="nodelet" type="nodelet" name="manager" args="manager" output="screen">
+            <param name="num_worker_threads" value="4" />
+        </node>
+
+        <!-- Spawn an image_proc/rectify nodelet to rectify the RGB image -->
+        <node pkg="nodelet" type="nodelet" name="rectify_rgb" args="load image_proc/rectify manager --no-bond" respawn="true">
+            <remap from="image_mono" to="rgb/image_raw" />
+            <remap from="image_rect" to="rgb/image_rect_color" />
+        </node>
+
+        <!-- Spawn an image_proc/rectify nodelet to rectify the depth image -->
+        <node pkg="nodelet" type="nodelet" name="rectify_depth" args="load image_proc/rectify manager --no-bond" respawn="true">
+            <remap from="image_mono" to="depth/image_raw" />
+            <remap from="image_rect" to="depth/image_rect" />
+            <param name="interpolation" value="0" />
+        </node>
+
+        <!-- Spawn an image_proc/rectify nodelet to rectify the depth_to_rgb image -->
+        <node pkg="nodelet" type="nodelet" name="rectify_depth_to_rgb" args="load image_proc/rectify manager --no-bond" respawn="true">
+            <remap from="image_mono" to="depth_to_rgb/image_raw" />
+            <remap from="image_rect" to="depth_to_rgb/image_rect" />
+            <remap from="camera_info" to="depth_to_rgb/camera_info"/>
+            <param name="interpolation" value="0" />
+        </node>
+
+        <node pkg="nodelet" type="nodelet" name="k4a_ros_bridge" args="load Azure_Kinect_ROS_Driver/K4AROSBridgeNodelet manager --no-bond" respawn="true">
+            <param name="sensor_sn" type="string" value="$(arg sensor_sn)" />
+            <param name="depth_enabled" type="bool" value="true" />
+            <param name="depth_mode" type="string" value="WFOV_2x2Binned" />
+            <param name="color_enabled" type="bool" value="true" />
+            <param name="color_resolution" type="string" value="1536P" />
+            <param name="fps" type="int" value="5" />
+            <param name="point_cloud" type="bool" value="true" />
+            <param name="rgb_point_cloud" type="bool" value="true" />
+            <param name="required" type="bool" value="false" />
+            <param name="tf_prefix" type="string" value="$(arg namespace)_" />
+            <param name="point_cloud_in_depth_frame" type="bool" value="false" />
+        </node>
+    </group>
+</launch>

@@ -2,6 +2,7 @@
 
 import rospy
 from sensor_msgs.msg import Image
+from hand_detection.msg import ImageWithRectangles, Rectangle # type: ignore
 from cv_bridge import CvBridge, CvBridgeError
 import cv2
 import mediapipe as mp
@@ -9,8 +10,9 @@ import mediapipe as mp
 class HandDetectionNode:
     def __init__(self):
         self.bridge = CvBridge()
-        self.image_sub = rospy.Subscriber('/camera/image', Image, self.image_callback)
+        self.image_sub = rospy.Subscriber('/cam0/k4a/rgb/image_raw', Image, self.image_callback)
         self.image_pub = rospy.Publisher('/hand_detection/image', Image, queue_size=10)
+        self.rectangle_pub = rospy.Publisher('/hand_detection/ImageWithRectangles', ImageWithRectangles, queue_size=10)
         
         self.mp_hands = mp.solutions.hands.Hands(
             static_image_mode=False,
@@ -28,6 +30,8 @@ class HandDetectionNode:
         # Convert the BGR image to RGB before processing
         rgb_image = cv2.cvtColor(cv_image, cv2.COLOR_BGR2RGB)
         results = self.mp_hands.process(rgb_image)
+        image_with_rectangles_msg = ImageWithRectangles()
+        rectangles = []
 
         if results.multi_hand_landmarks:
             for hand_landmarks in results.multi_hand_landmarks:
@@ -42,10 +46,25 @@ class HandDetectionNode:
                 x_max = int(x_max * w)
                 y_max = int(y_max * h)
 
+                rectangle_msg = Rectangle()
+                rectangle_msg.x1 = x_min
+                rectangle_msg.y1 = y_min
+                rectangle_msg.x2 = x_max
+                rectangle_msg.y2 = y_min
+                rectangle_msg.x3 = x_max
+                rectangle_msg.y3 = y_max
+                rectangle_msg.x4 = x_min
+                rectangle_msg.y4 = y_max
+                rectangles.append(rectangle_msg)
+
                 cv2.rectangle(cv_image, (x_min, y_min), (x_max, y_max), (0, 255, 0), 2)
 
         try:
             image_message = self.bridge.cv2_to_imgmsg(cv_image, 'bgr8')
+            print(rectangles)
+            image_with_rectangles_msg.image = image_message
+            image_with_rectangles_msg.rectangles = rectangles
+            self.rectangle_pub.publish(image_with_rectangles_msg)
             self.image_pub.publish(image_message)
         except CvBridgeError as e:
             rospy.logerr(f'CvBridge Error: {e}')
