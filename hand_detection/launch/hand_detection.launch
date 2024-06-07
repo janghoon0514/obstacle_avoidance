@@ -1,3 +1,4 @@
 <launch>
     <node pkg="hand_detection" type="hand_detection_node.py" name="hand_detection_node" output="screen"/>
+    <node pkg="hand_detection" type="point_generator.py" name="point_generator" output="screen"/>
 </launch>

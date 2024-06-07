@@ -31,5 +31,6 @@ include_directories(
 
 catkin_install_python(PROGRAMS
   src/hand_detection_node.py
+  src/point_generator.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
