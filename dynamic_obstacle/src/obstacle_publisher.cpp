@@ -4,8 +4,7 @@ DynamicObstacle::DynamicObstacle(ros::NodeHandle* nh):nh_(*nh)
 {
   initSub();
   initPub();
-  initService();
-  std::fill(std::begin(object_point_), std::end(object_point), 0);
+  std::fill(std::begin(object_point_), std::end(object_point_), 0);
   right_obstacle_.link_name = "obstacle_right";
   left_obstacle_.link_name = "obstacle_left";
 
@@ -30,23 +29,22 @@ DynamicObstacle::DynamicObstacle(ros::NodeHandle* nh):nh_(*nh)
 
 void DynamicObstacle::initSub()
 {
-  sub_ = nh_.subscribe("/obstacle/points", 1, DynamicObstacle::subCB, this);
+  sub_ = nh_.subscribe("/obstacle/points", 10, &DynamicObstacle::subCB, this);
 }
 
 void DynamicObstacle::initPub()
 {
-  pub_ = nh_.advertise<gazebo_msgs::LinkState>("/gazebo/set_link_state", 1000);
+  pub_ = nh_.advertise<gazebo_msgs::LinkState>("/gazebo/set_link_state", 100);
 }
 
 void DynamicObstacle::subCB(const geometry_msgs::PoseArray::ConstPtr& msg)
 {
     // Callback function to handle incoming PoseArray messages
-
-    right_obstacle_.pose.position.x = msg->poses[0].position.x;
-    right_obstacle_.pose.position.y = msg->poses[0].position.y;
+    right_obstacle_.pose.position.x = msg->poses[0].position.y;
+    right_obstacle_.pose.position.y = msg->poses[0].position.x;
     right_obstacle_.pose.position.z = msg->poses[0].position.z;
 
-    left_obstacle_.pose.position.x = msg->poses[1].position.x;
-    left_obstacle_.pose.position.y = msg->poses[1].position.y;
+    left_obstacle_.pose.position.x = msg->poses[1].position.y;
+    left_obstacle_.pose.position.y = msg->poses[1].position.x;
     left_obstacle_.pose.position.z = msg->poses[1].position.z;  
 }

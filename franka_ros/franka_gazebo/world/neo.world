@@ -64,7 +64,7 @@
         <visual name="visual">
           <geometry>
             <sphere>
-              <radius> 0.1 </radius>
+              <radius> 0.03 </radius>
             </sphere>
           </geometry>
         </visual>
@@ -77,7 +77,7 @@
         <visual name="visual">
           <geometry>
             <sphere>
-              <radius> 0.1 </radius>
+              <radius> 0.03 </radius>
             </sphere>
           </geometry>
         </visual>

@@ -8,7 +8,6 @@ from geometry_msgs.msg import Pose, Point, PoseArray
 from cv_bridge import CvBridge, CvBridgeError
 import numpy as np
 import cv2
-from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
 
 class point_get:

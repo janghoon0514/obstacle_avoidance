@@ -12,8 +12,9 @@ public:
   DynamicObstacle(ros::NodeHandle* nh);
   
   void obstaclePub(){
+    // ROS_INFO("CALL CHECK");
     pub_.publish(right_obstacle_); 
-    pub_.publish(left_obstacle_); 
+    pub_.publish(left_obstacle_);    
   };
 
 private:
@@ -27,8 +28,6 @@ private:
   
   void initSub();
   void initPub();
-  void initService();
   void subCB(const geometry_msgs::PoseArray::ConstPtr& msg);
 };
-
 

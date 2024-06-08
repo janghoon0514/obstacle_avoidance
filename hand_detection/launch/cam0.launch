@@ -1,6 +1,6 @@
 <launch>
     <group ns="cam0">
-        <include file="$(find unld_cam_driver)/launch/azure_driver.launch">
+        <include file="$(find hand_detection)/launch/azure_driver.launch">
             <arg name="sensor_sn" default="000248701812" />
             <arg name="namespace" default="cam0" />
         </include>

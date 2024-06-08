@@ -61,7 +61,7 @@ class HandDetectionNode:
 
         try:
             image_message = self.bridge.cv2_to_imgmsg(cv_image, 'bgr8')
-            print(rectangles)
+            # print(rectangles)
             image_with_rectangles_msg.image = image_message
             image_with_rectangles_msg.rectangles = rectangles
             self.rectangle_pub.publish(image_with_rectangles_msg)

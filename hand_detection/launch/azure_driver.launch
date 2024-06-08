@@ -32,8 +32,8 @@
 
         <node pkg="nodelet" type="nodelet" name="k4a_ros_bridge" args="load Azure_Kinect_ROS_Driver/K4AROSBridgeNodelet manager --no-bond" respawn="true">
             <param name="sensor_sn" type="string" value="$(arg sensor_sn)" />
-            <param name="depth_enabled" type="bool" value="true" />
-            <param name="depth_mode" type="string" value="WFOV_2x2Binned" />
+            <param name="depth_enabled" type="bool" value="false" />
+            <param name="depth_mode" type="string" value="NFOV_2x2BINNED" />
             <param name="color_enabled" type="bool" value="true" />
             <param name="color_resolution" type="string" value="1536P" />
             <param name="fps" type="int" value="5" />
