@@ -1,0 +1,21 @@
+<launch>
+  <arg name="robot_ip" default="simulated_robot"/>
+
+  <!-- Gazebo 시뮬레이션 환경 설정 -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="true"/>
+    <arg name="headless" value="false"/>
+  </include>
+
+  <!-- 프랑카 로봇 모델 로드 -->
+  <param name="robot_description" command="$(find xacro)/xacro '$(find franka_description)/robots/panda/panda.urdf.xacro'"/>
+
+  <!-- 컨트롤러 매니저 로드 -->
+  <rosparam command="load" file="$(find franka_control)/config/panda_arm_controller.yaml"/>
+  
+  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen"
+        args="joint_state_controller
+              panda_arm_velocity_controller"/>
+</launch>

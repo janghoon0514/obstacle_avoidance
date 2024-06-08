@@ -1,0 +1,88 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <world name="panda_pick_and_place">
+    <!--A global light source-->
+    <include>
+      <uri>model://sun</uri>
+    </include>
+    <!--A ground plane-->
+    <include>
+      <uri>model://ground_plane</uri>
+    </include>
+    <!--A pick tray-->
+    <include>
+      <uri>model://pick_tray</uri>
+      <pose>0.2 -0.3 0.01</pose>
+      <static>1</static> <!--Hot Fix to prevent drifting see #206-->
+    </include>
+    <!--A place tray-->
+    <include>
+      <uri>model://place_tray</uri>
+      <pose>0.2 0.3 0.01</pose>
+      <static>1</static> <!--Hot Fix to prevent drifting see #206-->
+    </include>
+
+    <!-- stone to grasp -->
+    <include>
+      <uri>model://stone</uri>
+      <name>bin1</name>
+      <pose>0.1 -0.2 0.5</pose>
+    </include>
+    <!-- stone to grasp -->
+    <include>
+      <uri>model://stone</uri>
+      <name>bin2</name>
+      <pose>0.1 -0.4 0.5</pose>
+    </include>
+    <!-- stone to grasp -->
+    <include>
+      <uri>model://stone</uri>
+      <name>bin3</name>
+      <pose>0.3 -0.2 0.5</pose>
+    </include>
+    <!-- stone to grasp -->
+    <include>
+      <uri>model://stone</uri>
+      <name>bin4</name>
+      <pose>0.3 -0.4 0.5</pose>
+    </include>
+
+    <physics type="ode">
+    <real_time_update_rate>500.0</real_time_update_rate>
+      <ode>
+          <solver>
+            <type>quick</type>
+            <iters>1000</iters>
+          </solver>
+      </ode>
+    </physics>
+
+    
+    <actor name="dynamic_obstacle1">
+      <pose>-1 1 1 0 0 0</pose>
+      <link name="obstacle_right">
+        <visual name="visual">
+          <geometry>
+            <sphere>
+              <radius> 0.1 </radius>
+            </sphere>
+          </geometry>
+        </visual>
+      </link>
+    </actor>
+
+    <actor name="dynamic_obstacle2">
+      <pose>-1 -1 1 0 0 0</pose>
+      <link name="obstacle_left">
+        <visual name="visual">
+          <geometry>
+            <sphere>
+              <radius> 0.1 </radius>
+            </sphere>
+          </geometry>
+        </visual>
+      </link>
+    </actor>
+
+  </world>
+</sdf>
